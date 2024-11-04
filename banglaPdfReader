@@ -1,0 +1,27 @@
+import pyttsx3
+import pdfplumber
+
+# Open the Bangla PDF file
+pdf_path = 'Bangla_PDF_File.pdf'
+with pdfplumber.open(pdf_path) as pdf:
+    pages = len(pdf.pages)
+    print(f"Total pages: {pages}")
+
+    # Initialize text-to-speech engine
+    friend = pyttsx3.init()
+
+    # Set up pyttsx3 for Bangla voice if available
+    voices = friend.getProperty('voices')
+    for voice in voices:
+        if 'Bangla' in voice.name or 'Bengali' in voice.name:
+            friend.setProperty('voice', voice.id)
+            break
+
+    # Iterate through pages and read text
+    for num in range(7, pages):
+        page = pdf.pages[num]
+        text = page.extract_text()
+        if text:
+            print(f"Reading page {num + 1}")
+            friend.say(text)
+            friend.runAndWait()
